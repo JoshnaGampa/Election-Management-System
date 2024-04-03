@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: apigateway-ms
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+          corsConfigurations:
+            '[/**]':
+              allowedOrigins: "*"
+              allowedMethods: "*"
+              allowedHeaders: "*"
+
+      routes:
+        - id: election
+          uri: http://localhost:4000/election
+          predicates:
+            - Path=/election/**
+          filters:
+            - AuthenticationFilter
+
+        - id: candidate
+          uri: http://localhost:4001/candidate
+          predicates:
+            - Path=/candidate/**
+          filters:
+            - AuthenticationFilter
+
+        - id: voter
+          uri: http://localhost:4002/voter
+          predicates:
+            - Path=/voter/**
+          filters:
+            - AuthenticationFilter
+
+        - id: vote
+          uri: http://localhost:4003/vote
+          predicates:
+            - Path=/vote/**
+          filters:
+            - AuthenticationFilter
+
+        - id: result
+          uri: http://localhost:4004/result
+          predicates:
+            - Path=/result/**
+          filters:
+            - AuthenticationFilter
+
+        - id: auth
+          uri: http://localhost:4005/auth
+          predicates:
+            - Path=/auth/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+server:
+  port: 4444
